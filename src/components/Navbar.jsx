@@ -152,7 +152,7 @@ const Navbar = ({ currentUser }) => {
         </MobileMenu>
 
         <NavItems>
-          <Navlink to="/dashboard">Dashboard</Navlink>
+          <Navlink to="/profile">Profile</Navlink>
           <Navlink to="/workouts">Workouts</Navlink>
           <Navlink to="/activitylogging">Activity Logging</Navlink>
           <Navlink to="/goalsetting">Goal Setting</Navlink>

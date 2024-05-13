@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ThemeProvider, styled } from "styled-components";
 import { lightTheme } from "./utils/Themes";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
-import SignIn from "./components/SignIn"
 import Authentication from "./pages/Authentication";
 import Dashboard from "./pages/Dashboard";
 import Workouts from "./pages/Workouts";
@@ -12,7 +11,9 @@ import Share from "./pages/Share";
 import WorkoutPlans from "./pages/WorkoutPlans";
 import ActivityLogger from "./pages/Activitylogging";
 import GoalSetting from "./pages/GoalSetting";
-import Devices from "./pages/Devices"
+import Devices from "./pages/Devices";
+import Profile from "./pages/Profile";
+import ProfileInfo from "./pages/Profile";
 
 const Container = styled.div`
   width: 100%;
@@ -28,23 +29,38 @@ const Container = styled.div`
 
 function App() {
   const { currentUser } = useSelector((state) => state.user);
+  const [authenticated, setAuthenticated] = useState(false);
+
+  // Check if the user is authenticated
+  useEffect(() => {
+    if (currentUser) {
+      setAuthenticated(true);
+    } else {
+      setAuthenticated(false);
+    }
+  }, [currentUser]);
+
   return (
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
-      <Container>
-            <Navbar currentUser={currentUser} />
+        <Container>
+          <Navbar currentUser={currentUser} />
           <Routes>
-            <Route path="/" element={<Authentication />} />
-            <Route path="/dashboard" exact element={<Dashboard />} />
-            <Route path="/activitylogging" exact element={<ActivityLogger />} />
-            <Route path="/goalsetting" exact element={<GoalSetting />} />
-            <Route path="/devices" exact element={<Devices />} />
-            <Route path="/workouts" exact element={<Workouts />} />
-            <Route path="/workoutplans" exact element={<WorkoutPlans />} />
-            <Route path="/share" exact element={<Share />} />
-            
+            <Route
+              path="/"
+              element={
+                authenticated ? <Navigate to="/dashboard" /> : <Authentication />
+              }
+            />
+            <Route path="/profile" element={<ProfileInfo />} />
+            <Route path="/activitylogging" element={<ActivityLogger />} />
+            <Route path="/goalsetting" element={<GoalSetting />} />
+            <Route path="/devices" element={<Devices />} />
+            <Route path="/workouts" element={<Workouts />} />
+            <Route path="/workoutplans" element={<WorkoutPlans />} />
+            <Route path="/share" element={<Share />} />
           </Routes>
-          </Container>
+        </Container>
       </BrowserRouter>
     </ThemeProvider>
   );
