@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTwitter, faFacebook, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import styled from "styled-components";
+import Button from "../components/Button";
 
 const Container = styled.div`
   flex: 1;
@@ -46,14 +47,18 @@ function ShareAchievements() {
     <div>
       <Title>Share Achievements</Title>
       <textarea
-        rows="4"
-        cols="50"
+        rows="10"
+        cols="190"
         placeholder="Enter your achievement here"
         value={achievementText}
         onChange={(e) => setAchievementText(e.target.value)}
       />
       <br />
-      <button onClick={handleShare}>Share</button>
+      <Button 
+      text="Share"
+      small
+      onClick={handleShare}
+       />
       
       {/* Social media icons */}
       <div>

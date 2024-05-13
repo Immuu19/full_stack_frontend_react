@@ -1,16 +1,26 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://fitnesstrack-vtv1.onrender.com/api/",
+  baseURL: "http://localhost:1400/api/v1/",
 });
+const tokenn =  localStorage.getItem("fittrack-app-token");
+/** console.log("tokkkkk",tokenn); */
+export const UserSignUp = async (data) => API.post("/user/register", data);
+export const UserSignIn = async (data) => API.post("/user/login", data);
 
-export const UserSignUp = async (data) => API.post("/user/signup", data);
-export const UserSignIn = async (data) => API.post("/user/signin", data);
 
 export const getDashboardDetails = async (token) =>
   API.get("/user/dashboard", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    headers: { Authorization: `Bearer ${tokenn}` },
+  },
+);
+
+export const getProfile = async (token) =>
+  API.get("/user/profile", {
+    headers: { Authorization: `Bearer ${tokenn}` },
+  },console.log("HEREEEE",tokenn)
+);
+
 
 export const getWorkouts = async (token, date) =>
   await API.get(`/user/workout${date}`, {

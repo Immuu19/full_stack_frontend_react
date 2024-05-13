@@ -5,7 +5,7 @@ import Button from "./Button";
 import { UserSignIn } from "../api";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/reducers/userSlice";
-import button from "./Button";
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   width: 100%;
@@ -14,19 +14,23 @@ const Container = styled.div`
   flex-direction: column;
   gap: 36px;
 `;
+
 const Title = styled.div`
   font-size: 30px;
   font-weight: 800;
   color: ${({ theme }) => theme.text_primary};
 `;
+
 const Span = styled.div`
   font-size: 16px;
   font-weight: 400;
   color: ${({ theme }) => theme.text_secondary + 90};
 `;
 
+
 const SignIn = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [email, setEmail] = useState("");
@@ -42,20 +46,29 @@ const SignIn = () => {
 
   const handelSignIn = async () => {
     setLoading(true);
-    setButtonDisabled(false);
+    setButtonDisabled(true);
     if (validateInputs()) {
-      await UserSignIn({ email, password })
-        .then((res) => {
-          dispatch(loginSuccess(res.data));
-          alert("Login Success");
-          setLoading(false);
-          setButtonDisabled(false);
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-          setLoading(false);
-          setButtonDisabled(false);
+      try {
+        const response = await UserSignIn({
+          userName: email,
+          password: password,
+          role: 'CONSUMER'
         });
+        dispatch(loginSuccess(response.data.data.jwtToken));
+        alert("Login Success");
+        console.log(response.data.data.jwtToken)
+        navigate('/activitylogging');
+        
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          alert(error.response.data.message);
+        } else {
+          alert("User Account not found !! Kindly SignUP !!!");
+        }
+      } finally {
+        setLoading(false);
+        setButtonDisabled(false);
+      }
     }
   };
 
